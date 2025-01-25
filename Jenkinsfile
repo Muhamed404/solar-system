@@ -46,15 +46,6 @@ pipeline {
                checkout scm 
                    }
         }
-        stage('Move App Content to Workspace') {
-            steps {
-            sh '''
-               mv ./app/* ./  || true
-               mv ./app/.* ./ || true
-            '''
-            }
-
-        }
         stage('Installing Dependencies') {
             options { timestamps() }
             steps {
