@@ -234,7 +234,7 @@ pipeline {
                 branch 'PR*'
             }
             steps {
-                sh 'git clone -b main https://github.com/Devops-egy-org/solar-system-gitops-argocd'
+                sh 'git clone -b main https://github.com/Muhamed404/solar-system-k8s'
                 dir("solar-system-gitops-argocd/kubernetes") { //cahange the current dir
                     sh '''
                        #### Replace Docker Tage #####
@@ -267,7 +267,7 @@ pipeline {
                         -H "Accept: application/vnd.github+json" \
                         -H "Authorization: Bearer $GITHUB_TOKEN" \
                         -H "X-GitHub-Api-Version: 2022-11-28" \
-                        https://api.github.com/repos/Devops-egy-org/solar-system-gitops-argocd/pulls \
+                        https://github.com/Muhamed404/solar-system-k8s/pulls \
                         -d \'{
                             "title": "Update Docker Image",
                             "body": "Update docker image in deployment manifest!",
