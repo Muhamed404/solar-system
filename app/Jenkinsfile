@@ -49,8 +49,8 @@ pipeline {
         stage('Move App Content to Workspace') {
             steps {
             sh '''
-               mv ./app/* ./ 
-               mv ./app/.* ./
+               mv ./app/* ./  || true
+               mv ./app/.* ./ || true
             '''
             }
 
