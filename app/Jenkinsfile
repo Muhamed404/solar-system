@@ -53,6 +53,12 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
+        stage('Move App Content to Workspace') {
+            sh '''
+               mv ./app/* ./ 
+               mv ./app/.* ./
+            '''
+        }
         stage('Dependency Scaning') {
             parallel {                  // It used to excute stages at same time Not depends on each other. 
                 stage('NPM Dependency Audit') {
