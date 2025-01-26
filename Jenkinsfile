@@ -190,6 +190,9 @@ pipeline {
             }
         }
         stage ('Provision - AWS EC2') {
+            when {
+                 branch 'feature/*'
+            }
             steps {
                 withAWS(credentials: 'aws-s3-ec2-lambda-cerds', region: 'us-east-2') {
                     script {
@@ -209,7 +212,6 @@ pipeline {
             }
           }      
         } 
-
         stage ('Deploy - AWS EC2 ') { //Deploy dockerization app via ssh Agent Plugin 
             when { //this is condection to run this stage at spific branch 
                 branch 'feature/*'
@@ -248,6 +250,15 @@ pipeline {
                     '''
 
                 }
+            }
+        }
+
+        stage ('Destroy - AWS EC2') {
+            when {
+                branch 'feature/*'
+            }
+            steps {
+                sh 'terraform destroy --auto-approve'
             }
         }
         stage ('K8S Updte Image Tag') {
