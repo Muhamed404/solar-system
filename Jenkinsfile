@@ -192,26 +192,24 @@ pipeline {
         stage ('Provision - AWS EC2') {
             steps {
                 withAWS(credentials: 'aws-s3-ec2-lambda-cerds', region: 'us-east-2') {
-                    sh '''
-                       terraform init
-                       terraform apply --auto-approve
-                       export PUBLIC_IP=$(terraform output -raw public_ip)
-                       echo "PUBLIC_IP=$PUBLIC_IP" >> env.properties
-                    '''              
-                }
-                script {
-                    if (fileExists('env.properties')) {
-                        def vars = readProperties file: 'env.properties'
-                        env.PUBLIC_IP = vars.PUBLIC_IP
-                        echo "Public IP is: ${env.PUBLIC_IP}"
-                    }
-                    else {
-                        error "env.properties file not found!"
-                    }
+                    script {
+                        env.PUBLIC_IP = sh(
+                            script: '''
+                                set -e
+                                terraform init
+                                terraform apply --auto-approve
+                                terraform output -raw public_ip
+                            ''',
+                            returnStdout: true
+                        )
 
-                }
+                        // Output the captured IP to the console
+                        echo "Public IP is: ${env.PUBLIC_IP}"
+               }
             }
-        }
+          }      
+        } 
+
         stage ('Deploy - AWS EC2 ') { //Deploy dockerization app via ssh Agent Plugin 
             when { //this is condection to run this stage at spific branch 
                 branch 'feature/*'
