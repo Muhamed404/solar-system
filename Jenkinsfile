@@ -204,7 +204,7 @@ pipeline {
                                 terraform output -raw public_ip
                             ''',
                             returnStdout: true
-                        )
+                        ).trim()
 
                         // Output the captured IP to the console
                         echo "Public IP is: ${env.PUBLIC_IP_DEV_EC2}"
