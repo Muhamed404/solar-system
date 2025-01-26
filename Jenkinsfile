@@ -200,9 +200,15 @@ pipeline {
                     '''              
                 }
                 script {
-                    def vars = readProperties file: './env.properties'
-                    env.PUBLIC_IP = vars.PUBLIC_IP
-                    echo "Public IP is: ${env.PUBLIC_IP}"
+                    if (fileExists('env.properties')) {
+                        def vars = readProperties file: 'env.properties'
+                        env.PUBLIC_IP = vars.PUBLIC_IP
+                        echo "Public IP is: ${env.PUBLIC_IP}"
+                    }
+                    else {
+                        error "env.properties file not found!"
+                    }
+
                 }
             }
         }
