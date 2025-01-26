@@ -220,6 +220,7 @@ pipeline {
               script{ // I used script block becouse Crovy did't understand if condectios and for loop
                     sshagent(['aws-dev-deploy-ec2-instance']) {
                         sh '''
+                            echo "Public IP is: ${env.PUBLIC_IP_DEV_EC2}"
                             ssh -o StrictHostKeyChecking=no ec2-user@${env.PUBLIC_IP_DEV_EC2} "
                                 if sudo docker ps -a | grep -q "solar-system"; then
                                     echo "Container found. Stopping and removing..."
