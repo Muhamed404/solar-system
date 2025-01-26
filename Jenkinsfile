@@ -196,7 +196,7 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-s3-ec2-lambda-cerds', region: 'us-east-2') {
                     script {
-                        env.PUBLIC_IP = sh(
+                        env.PUBLIC_IP_DEV_EC2 = sh(
                             script: '''
                                 set -e
                                 terraform init
@@ -207,7 +207,7 @@ pipeline {
                         )
 
                         // Output the captured IP to the console
-                        echo "Public IP is: ${env.PUBLIC_IP}"
+                        echo "Public IP is: ${env.PUBLIC_IP_DEV_EC2}"
                }
             }
           }      
@@ -220,7 +220,7 @@ pipeline {
               script{ // I used script block becouse Crovy did't understand if condectios and for loop
                     sshagent(['aws-dev-deploy-ec2-instance']) {
                         sh '''
-                            ssh -o StrictHostKeyChecking=no ec2-user@18.227.105.220 "
+                            ssh -o StrictHostKeyChecking=no ec2-user@${env.PUBLIC_IP_DEV_EC2} "
                                 if sudo docker ps -a | grep -q "solar-system"; then
                                     echo "Container found. Stopping and removing..."
                                     sudo docker stop solar-system && sudo docker rm solar-system
