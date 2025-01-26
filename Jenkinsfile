@@ -189,7 +189,7 @@ pipeline {
                 }
             }
         }
-        stage ('Provision - AWS EC2') }{
+        stage ('Provision - AWS EC2') {
             steps {
                 withAWS(credentials: 'aws-s3-ec2-lambda-cerds', region: 'us-east-2') {
                     sh '''
