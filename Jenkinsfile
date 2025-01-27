@@ -260,7 +260,9 @@ pipeline {
                 branch 'feature/*'
             }
             steps {
-                sh 'terraform destroy --auto-approve'
+                withAWS(credentials: 'aws-s3-ec2-lambda-cerds', region: 'us-east-2') {
+                    sh 'terraform destroy --auto-approve'
+                }
             }
         }
         stage ('K8S Updte Image Tag') {
