@@ -190,26 +190,29 @@ pipeline {
             }
         }
         stage ('Provision - AWS EC2') {
+            when {
+                 branch 'feature/*'
+            }
             steps {
                 withAWS(credentials: 'aws-s3-ec2-lambda-cerds', region: 'us-east-2') {
                     script {
-                        env.PUBLIC_IP = sh(
-                            script: '''
-                                set -e
-                                terraform init
-                                terraform apply --auto-approve
+                        sh '''
+                           terraform init
+                           terraform apply --auto-approve
+                        '''
+                        env.PUBLIC_IP_DEV_EC2 = sh(
+                            script: '''            
                                 terraform output -raw public_ip
                             ''',
                             returnStdout: true
-                        )
+                        ).trim()
 
                         // Output the captured IP to the console
-                        echo "Public IP is: ${env.PUBLIC_IP}"
+                        echo "Public IP is: ${env.PUBLIC_IP_DEV_EC2}"
                }
             }
           }      
         } 
-
         stage ('Deploy - AWS EC2 ') { //Deploy dockerization app via ssh Agent Plugin 
             when { //this is condection to run this stage at spific branch 
                 branch 'feature/*'
@@ -217,8 +220,9 @@ pipeline {
             steps {
               script{ // I used script block becouse Crovy did't understand if condectios and for loop
                     sshagent(['aws-dev-deploy-ec2-instance']) {
-                        sh '''
-                            ssh -o StrictHostKeyChecking=no ec2-user@18.227.105.220 "
+                        sh """
+                            sleep 50s
+                            ssh -o StrictHostKeyChecking=no ubuntu@${env.PUBLIC_IP_DEV_EC2} "
                                 if sudo docker ps -a | grep -q "solar-system"; then
                                     echo "Container found. Stopping and removing..."
                                     sudo docker stop solar-system && sudo docker rm solar-system
@@ -230,7 +234,7 @@ pipeline {
                                         -e MONGO_PASSWORD=$MONGO_PASSWORD \
                                         -p 3000:3000 -d muhamedk/solar-system:$GIT_COMMIT
                             "
-                        '''
+                        """
                     }
                 }    
 
@@ -250,13 +254,24 @@ pipeline {
                 }
             }
         }
+
+        stage ('Destroy - AWS EC2') {
+            when {
+                branch 'feature/*'
+            }
+            steps {
+                withAWS(credentials: 'aws-s3-ec2-lambda-cerds', region: 'us-east-2') {
+                    sh 'terraform destroy --auto-approve'
+                }
+            }
+        }
         stage ('K8S Updte Image Tag') {
             when {
                 branch 'PR*'
             }
             steps {
                 sh 'git clone -b main https://github.com/Muhamed404/solar-system-k8s'
-                dir("solar-system-gitops-argocd/kubernetes") { //cahange the current dir
+                dir("solar-system-k8s/kubernetes") { //cahange the current dir
                     sh '''
                        #### Replace Docker Tage #####
                        git checkout main 
@@ -266,7 +281,7 @@ pipeline {
 
                        #### Commit and Push to Feature Branch ####
                        git config --global user.email "jenkins@solar.com"
-                       git remote set-url origin https://$GITHUB_TOKEN@github.com/Devops-egy-org/solar-system-gitops-argocd
+                       git remote set-url origin https://$GITHUB_TOKEN@github.com/Muhamed404/solar-system-k8s
                        git add .
                        git commit -am "Update Docker Image"
                        git push -u origin feature-$BUILD_ID
