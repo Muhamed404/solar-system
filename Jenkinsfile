@@ -214,7 +214,7 @@ pipeline {
           }      
         } 
         stage ('Deploy - AWS EC2 ') { //Deploy Dockerization App via ssh Agent Plugin 
-            when { //this is Condection to Run this stage at spific branch 
+            when { //This is Condection to Run this stage at spific branch 
                 branch 'feature/*'
             }
             steps {
