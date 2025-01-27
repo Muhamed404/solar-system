@@ -221,8 +221,8 @@ pipeline {
               script{ // I used script block becouse Crovy did't understand if condectios and for loop
                     sshagent(['aws-dev-deploy-ec2-instance']) {
                         sh """
-                            echo "Public IP is: ${env.PUBLIC_IP_DEV_EC2}"
-                            ssh -o StrictHostKeyChecking=no ubuntu@${env.PUBLIC_IP_DEV_EC2} << 'EOF'
+                            sleep 30s
+                            ssh -o StrictHostKeyChecking=no ubuntu@${env.PUBLIC_IP_DEV_EC2} <<EOF
                                 if sudo docker ps -a | grep -q "solar-system"; then
                                     echo "Container found. Stopping and removing..."
                                     sudo docker stop solar-system && sudo docker rm solar-system
@@ -269,7 +269,7 @@ pipeline {
             }
             steps {
                 sh 'git clone -b main https://github.com/Muhamed404/solar-system-k8s'
-                dir("solar-system-gitops-argocd/kubernetes") { //cahange the current dir
+                dir("solar-system-k8s/kubernetes") { //cahange the current dir
                     sh '''
                        #### Replace Docker Tage #####
                        git checkout main 
@@ -279,7 +279,7 @@ pipeline {
 
                        #### Commit and Push to Feature Branch ####
                        git config --global user.email "jenkins@solar.com"
-                       git remote set-url origin https://$GITHUB_TOKEN@github.com/Devops-egy-org/solar-system-gitops-argocd
+                       git remote set-url origin https://$GITHUB_TOKEN@github.com/Muhamed404/solar-system-k8s
                        git add .
                        git commit -am "Update Docker Image"
                        git push -u origin feature-$BUILD_ID
