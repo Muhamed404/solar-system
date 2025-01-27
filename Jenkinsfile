@@ -213,12 +213,12 @@ pipeline {
             }
           }      
         } 
-        stage ('Deploy - AWS EC2 ') { //Deploy Dockerization app via ssh Agent Plugin 
-            when { //this is Condection to run this stage at spific branch 
+        stage ('Deploy - AWS EC2 ') { //Deploy Dockerization App via ssh Agent Plugin 
+            when { //This is Condection to Run this stage at spific branch 
                 branch 'feature/*'
             }
             steps {
-              script{ // I used script block becouse Crovy did't understand if condectios and for loop
+              script{ // I Used Script block becouse Crovy did't understand If condectios and for loop
                     sshagent(['aws-dev-deploy-ec2-instance']) {
                         sh """
                             sleep 55s
