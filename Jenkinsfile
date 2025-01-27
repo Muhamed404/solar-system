@@ -218,7 +218,7 @@ pipeline {
                 branch 'feature/*'
             }
             steps {
-              script{ // I Used Script Block ﻵecouse Crovy did't understand If condectios and for loop
+              script{ // I Used Script Block ﻵecouse Crovy did't Understand If condectios and for loop
                     sshagent(['aws-dev-deploy-ec2-instance']) {
                         sh """
                             sleep 55s
