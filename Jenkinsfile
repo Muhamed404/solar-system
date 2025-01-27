@@ -214,14 +214,14 @@ pipeline {
           }      
         } 
         stage ('Deploy - AWS EC2 ') { //Deploy dockerization app via ssh Agent Plugin 
-            when { //this is condection to run this stage at spific branch 
+            when { //this is Condection to run this stage at spific branch 
                 branch 'feature/*'
             }
             steps {
               script{ // I used script block becouse Crovy did't understand if condectios and for loop
                     sshagent(['aws-dev-deploy-ec2-instance']) {
                         sh """
-                            sleep 50s
+                            sleep 55s
                             ssh -o StrictHostKeyChecking=no ubuntu@${env.PUBLIC_IP_DEV_EC2} "
                                 if sudo docker ps -a | grep -q "solar-system"; then
                                     echo "Container found. Stopping and removing..."
