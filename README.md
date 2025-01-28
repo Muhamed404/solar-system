@@ -127,4 +127,4 @@ Once deployed to the Kubernetes cluster, access the application at the designate
 
 ---
 
-Let me know if there are additional details you would like to include or modify.
+
