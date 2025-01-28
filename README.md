@@ -1,169 +1,125 @@
+
 # Solar System NodeJS Application
 
-A simple HTML+MongoDB+NodeJS project to display Solar System and it's planets.
+A simple HTML + MongoDB + Node.js project to display the Solar System and its planets.
 
 ---
+
 ## Requirements
 
-For development, you will only need Node.js and NPM installed in your environement.
+To develop and run this application, you will need **Node.js** and **NPM** installed in your environment.
 
-### Node
-- #### Node installation on Windows
+### Node Installation on Windows
+1. Visit the official [Node.js website](https://nodejs.org) and download the installer.
+2. Ensure Git is available in your PATH, as NPM might require it. [Download Git here](https://git-scm.com/).
 
-  Just go on [official Node.js website](https://nodejs.org/) and download the installer.
-Also, be sure to have `git` available in your PATH, `npm` might need it (You can find git [here](https://git-scm.com/)).
+### Node Installation on Ubuntu
+Run the following commands to install Node.js and NPM using `apt`:
+```bash
+$ sudo apt install nodejs
+$ sudo apt install npm
+```
 
-- #### Node installation on Ubuntu
+### Installation on Other Operating Systems
+Visit the official [Node.js website](https://nodejs.org) and [NPM website](https://www.npmjs.com) for instructions.
 
-  You can install nodejs and npm easily with apt install, just run the following commands.
+### Verify Installation
+After installation, run the following commands to check the installed versions:
+```bash
+$ node --version
+v8.11.3
 
-      $ sudo apt install nodejs
-      $ sudo apt install npm
-
-- #### Other Operating Systems
-  You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
-
-If the installation was successful, you should be able to run the following command.
-
-    $ node --version
-    v8.11.3
-
-    $ npm --version
-    6.1.0
+$ npm --version
+6.1.0
+```
 
 ---
-## Install Dependencies from `package.json`
-    $ npm install
 
-## Run Unit Testing
-    $ npm test
+## Installation and Usage
 
-## Run Code Coverage
-    $ npm run coverage
+### Install Dependencies
+To install project dependencies from `package.json`, run:
+```bash
+$ npm install
+```
 
-## Run Application
-    $ npm start
+### Run Unit Testing
+To execute the unit tests, run:
+```bash
+$ npm test
+```
 
-## Access Application on Browser
-    http://localhost:3000/
+### Run Code Coverage
+To generate a code coverage report, run:
+```bash
+$ npm run coverage
+```
 
+### Run the Application
+To start the application, run:
+```bash
+$ npm start
+```
 
-    Jenkinsfile Documentation
-Purpose
-This Jenkinsfile defines a CI/CD pipeline for a Node.js application. It automates various stages such as code checkout, dependency installation, security scans, unit testing, Docker image management, and deployment to AWS, Kubernetes (via ArgoCD), and AWS Lambda. The pipeline integrates with tools like SonarQube, OWASP Dependency Check, Trivy, and ZAP.
+### Access the Application
+Once the application is running, you can access it in your browser at:
+```
+http://localhost:3000/
+```
 
-Key Features
-1.Slack Notifications: Notifies the build status (STARTED, SUCCESS, UNSTABLE, FAILURE) in a Slack channel.
-2.Node.js Support: Specifies the Node.js version to use (nodejs-22-6-0).
-Parallel Dependency Scanning:
-NPM audit.
-OWASP Dependency Check.
-Unit Testing and Code Coverage:
-Executes tests and publishes coverage reports.
-Static Application Security Testing (SAST): Uses SonarQube for source code analysis.
-Docker Integration:
-Builds Docker images.
-Scans images with Trivy for vulnerabilities.
-Pushes images to Docker Hub.
-Kubernetes Deployment with ArgoCD:
-Updates Kubernetes manifests stored in the solar-system-k8s repository.
-Creates a pull request for image tag updates.
-Deploys to the Kubernetes cluster using ArgoCD.
-Dynamic Application Security Testing (DAST): Uses OWASP ZAP for scanning web interfaces.
-AWS S3 Integration:
-Uploads reports to an S3 bucket.
-AWS Lambda Deployment:
-Prepares, uploads, and deploys the application as a Lambda function.
-Approval Gates: Incorporates manual approvals for production deployments.
+---
 
-Pipeline Stages
-1. Clean Workspace
-Cleans the workspace to ensure no artifacts from previous builds remain.
+## CI/CD Pipeline Overview
 
-2. Checkout Code
-Pulls the latest code from the repository.
+This project includes an automated CI/CD pipeline using Jenkins. The pipeline supports the following:
 
-3. Installing Dependencies
-Installs project dependencies using npm.
+### Key Features
+1. **Slack Notifications**: Sends build status notifications (`STARTED`, `SUCCESS`, `UNSTABLE`, `FAILURE`) to a Slack channel.
+2. **Parallel Dependency Scanning**:
+   - NPM audit.
+   - OWASP Dependency Check.
+3. **Unit Testing and Code Coverage**:
+   - Executes tests and publishes coverage reports.
+4. **Static Application Security Testing (SAST)**: Uses SonarQube for source code analysis.
+5. **Docker Integration**:
+   - Builds Docker images.
+   - Scans images with Trivy for vulnerabilities.
+   - Pushes images to Docker Hub.
+6. **Kubernetes Deployment with ArgoCD**:
+   - Updates Kubernetes manifests stored in the [solar-system-k8s](https://github.com/Muhamed404/solar-system-k8s) repository.
+   - Creates a pull request for image tag updates.
+   - Deploys to the Kubernetes cluster using ArgoCD.
+7. **Dynamic Application Security Testing (DAST)**: Uses OWASP ZAP for scanning web interfaces.
+8. **AWS S3 Integration**: Uploads reports to an S3 bucket.
+9. **AWS Lambda Deployment**: Prepares, uploads, and deploys the application as a Lambda function.
+10. **Approval Gates**: Incorporates manual approvals for production deployments.
 
-4. Dependency Scanning
-NPM Audit: Scans for critical vulnerabilities in NPM dependencies.
-OWASP Dependency Check: Identifies known vulnerabilities in dependencies.
-5. Unit Testing
-Runs unit tests and captures results for Jenkins.
+---
 
-6. Code Coverage
-Publishes code coverage reports to Jenkins.
+## Kubernetes Deployment with ArgoCD
 
-7. Static Application Security Testing (SAST)
-Analyzes source code with SonarQube for code quality and vulnerabilities.
+### Manifests Repository
+The Kubernetes manifests for this project are stored in the following repository:
+[solar-system-k8s](https://github.com/Muhamed404/solar-system-k8s)
 
-8. Build Docker Image
-Builds a Docker image of the application and tags it with the Git commit hash.
+### Deployment Workflow
+1. **Image Tag Update**:
+   - Updates the Docker image tag in the Kubernetes manifests.
+   - Creates a pull request in the [solar-system-k8s](https://github.com/Muhamed404/solar-system-k8s) repository.
+2. **ArgoCD Synchronization**:
+   - ArgoCD monitors the `main` branch of the repository.
+   - Once the pull request is merged, ArgoCD automatically applies the updated manifests to the Kubernetes cluster.
 
-9. Trivy Vulnerability Scanner
-Scans the Docker image for vulnerabilities and publishes reports.
+### Validation
+You can verify the deployment using:
+- The ArgoCD dashboard.
+- The `kubectl` command.
 
-10. Push Docker Image
-Pushes the built Docker image to Docker Hub.
+---
 
-11. Provision AWS EC2
-Uses Terraform to provision EC2 instances.
+## Access Application on Kubernetes
+Once deployed to the Kubernetes cluster, access the application at the designated service URL.
 
-12. Deploy on AWS EC2
-Deploys the application to the provisioned EC2 instance.
+---
 
-13. Integration Testing
-Runs integration tests on the deployed application.
-
-14. Destroy AWS EC2
-Tears down the EC2 environment post-integration testing.
-
-15. Kubernetes Image Update
-Description
-This stage updates the Docker image tag in Kubernetes manifests stored in the solar-system-k8s repository.
-
-Actions
-Clones the repository: https://github.com/Muhamed404/solar-system-k8s.
-Updates the deployment.yml file to include the new Docker image tag.
-Commits and pushes the changes to a new feature branch.
-Raises a pull request to merge the updated manifests into the main branch.
-Commands
-bash
-Copy
-Edit
-git clone -b main https://github.com/Muhamed404/solar-system-k8s
-cd solar-system-k8s/kubernetes
-sed -i "s#muhamedk.*#muhamedk/solar-system:$GIT_COMMIT#g" deployment.yml
-git checkout -b feature-$BUILD_ID
-git add .
-git commit -m "Update Docker Image"
-git push -u origin feature-$BUILD_ID
-16. Kubernetes Deployment with ArgoCD
-Description
-Once the manifests are updated in the main branch of the repository, ArgoCD automatically synchronizes the changes to deploy the updated application to the Kubernetes cluster.
-
-Actions
-Waits for a manual confirmation (APP Deployed? stage) to ensure the PR is merged and ArgoCD has synchronized the changes.
-ArgoCD pulls the updated manifests from the main branch of the repository and applies them to the Kubernetes cluster.
-ArgoCD Details
-Manifests Repository: solar-system-k8s
-Synchronization: ArgoCD continuously monitors the main branch for updates to automatically apply changes.
-Validation: You can verify the deployment by inspecting the ArgoCD dashboard or using the kubectl command.
-17. Dynamic Application Security Testing (DAST)
-Uses OWASP ZAP to scan the application for runtime vulnerabilities.
-
-18. Upload Reports to AWS S3
-Uploads test and scan reports to an S3 bucket for centralized storage.
-
-19. Approval for Production Deployment
-Includes a manual approval step for deploying to production.
-
-20. AWS Lambda Deployment
-Prepares, uploads, and deploys the application as a Lambda function.
-
-21. Invoke Lambda Function
-Validates the deployed Lambda function by invoking it.
-
-This structure ensures that Kubernetes Image Update and Kubernetes Deployment with ArgoCD are logically integrated into the pipeline stages, maintaining proper sequencing. Let me know if you need further refinements!
-
+Let me know if there are additional details you would like to include or modify.
