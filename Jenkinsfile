@@ -271,7 +271,7 @@ pipeline {
             }
             steps {
                 sh 'git clone -b main https://github.com/Muhamed404/solar-system-k8s'
-                dir("solar-system-k8s/kubernetes") { //cahange the current dir
+                dir("solar-system-k8s/kubernetes") { //cahange working current dir
                     sh '''
                        #### Replace Docker Tage #####
                        git checkout main 
