@@ -71,7 +71,7 @@ http://localhost:3000/
 
 ## CI/CD Pipeline Overview
 
-This project includes an automated CI/CD pipeline using Jenkins. The pipeline supports the following:
+This project includes an automated CI/CD pipeline using Jenkins. It automates various stages such as code checkout, dependency installation, security scans, unit testing, Docker image management, and deployment to AWS, Kubernetes (via ArgoCD), and AWS Lambda. The pipeline integrates with tools like SonarQube, OWASP Dependency Check, Trivy, and ZAP:
 
 ### Key Features
 1. **Slack Notifications**: Sends build status notifications (`STARTED`, `SUCCESS`, `UNSTABLE`, `FAILURE`) to a Slack channel.
@@ -80,7 +80,8 @@ This project includes an automated CI/CD pipeline using Jenkins. The pipeline su
    - OWASP Dependency Check.
 3. **Unit Testing and Code Coverage**:
    - Executes tests and publishes coverage reports.
-4. **Static Application Security Testing (SAST)**: Uses SonarQube for source code analysis.
+4. **Static Application Security Testing (SAST)**:
+   - Uses SonarQube for source code analysis.
 5. **Docker Integration**:
    - Builds Docker images.
    - Scans images with Trivy for vulnerabilities.
@@ -89,10 +90,14 @@ This project includes an automated CI/CD pipeline using Jenkins. The pipeline su
    - Updates Kubernetes manifests stored in the [solar-system-k8s](https://github.com/Muhamed404/solar-system-k8s) repository.
    - Creates a pull request for image tag updates.
    - Deploys to the Kubernetes cluster using ArgoCD.
-7. **Dynamic Application Security Testing (DAST)**: Uses OWASP ZAP for scanning web interfaces.
-8. **AWS S3 Integration**: Uploads reports to an S3 bucket.
-9. **AWS Lambda Deployment**: Prepares, uploads, and deploys the application as a Lambda function.
-10. **Approval Gates**: Incorporates manual approvals for production deployments.
+7. **Dynamic Application Security Testing (DAST)**:
+   - Uses OWASP ZAP for scanning web interfaces.
+8. **AWS S3 Integration**:
+    - Uploads reports to an S3 bucket.
+9. **AWS Lambda Deployment**:
+    - Prepares, uploads, and deploys the application as a Lambda function.
+10. **Approval Gates**:
+    - Incorporates manual approvals for production deployments.
 
 ---
 
